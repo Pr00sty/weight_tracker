@@ -1,15 +1,29 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
-from database import SessionLocal, engine
+from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response
 from starlette.status import HTTP_201_CREATED, HTTP_409_CONFLICT
 
 import crud
 import models
+from database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:8000",
+    "http://localhost:8001",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def get_db():
