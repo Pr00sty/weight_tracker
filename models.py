@@ -3,6 +3,7 @@ from sqlalchemy import ForeignKey, Sequence, Column, Integer, Float, DateTime, S
 from sqlalchemy.orm import relationship
 from database import Base
 
+
 class User(Base):
     __tablename__ = 'Users'
 
@@ -10,6 +11,7 @@ class User(Base):
     name = Column(String)
 
     measurements = relationship('Measurement', back_populates='users')
+
 
 class Measurement(Base):
     __tablename__ = 'Measurement'

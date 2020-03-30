@@ -1,6 +1,8 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
+from starlette.responses import Response
+from starlette.status import HTTP_201_CREATED, HTTP_409_CONFLICT
 
 import crud
 import models
@@ -9,6 +11,7 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+
 def get_db():
     try:
         db = SessionLocal()
@@ -16,10 +19,18 @@ def get_db():
     finally:
         db.close()
 
-@app.put('/add_measurement/{id}')
-async def create_measurement(user_id: int, value: float, db: Session = Depends(get_db)):
-    return crud.create_measurement(db=db, user_id=user_id, value=value)
 
-@app.get("/")
+@app.put('/add_measurement/{id}&{value}')
+async def create_measurement(user_id: int, value: float, response: Response, db: Session = Depends(get_db)):
+    try:
+        response.status_code = HTTP_201_CREATED
+        return crud.create_measurement(db=db, user_id=user_id, value=value)
+    except ValueError:
+        response.status_code = HTTP_409_CONFLICT
+    except TypeError:
+        response.status_code = HTTP_409_CONFLICT
+
+
+@app.get("/get_weight/{user_id}")
 async def get_weight(user_id: int, db: Session = Depends(get_db)) -> float:
     return crud.get_weight(db=db, user_id=user_id)

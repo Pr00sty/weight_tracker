@@ -9,6 +9,8 @@ verify_ssl = true
 sqlalchemy = "*"
 alembic = "*"
 fastapi = "*"
+pytest = "*"
+starlette = "*"
 
 [requires]
 python_version = "3.7"
