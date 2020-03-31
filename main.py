@@ -34,11 +34,11 @@ def get_db():
         db.close()
 
 
-@app.put('/add_measurement/{id}&{value}')
-async def create_measurement(user_id: int, value: float, response: Response, db: Session = Depends(get_db)):
+@app.put('/add_measurement/user_id={user_id}&weight={weight}')
+async def create_measurement(user_id: int, weight: float, response: Response, db: Session = Depends(get_db)):
     try:
         response.status_code = HTTP_201_CREATED
-        return crud.create_measurement(db=db, user_id=user_id, value=value)
+        return crud.create_measurement(db=db, user_id=user_id, value=weight)
     except ValueError:
         response.status_code = HTTP_409_CONFLICT
     except TypeError:
