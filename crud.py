@@ -1,5 +1,7 @@
+from typing import List
+
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_201_CREATED
+
 from models import Measurement
 
 
@@ -16,4 +18,8 @@ def create_measurement(db: Session, user_id: int, value: float) -> Measurement:
 
 
 def get_weight(db: Session, user_id: int) -> float:
-    return db.query(Measurement).filter(Measurement.user_id == user_id).first()
+    return db.query(Measurement).filter(Measurement.user_id == user_id).order_by(Measurement.date.desc()).first()
+
+
+def get_weights(db: Session, user_id: int) -> List[float]:
+    return db.query(Measurement).filter(Measurement.user_id == user_id).all()

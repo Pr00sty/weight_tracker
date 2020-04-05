@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from starlette.middleware.cors import CORSMiddleware
@@ -48,3 +50,8 @@ async def create_measurement(user_id: int, weight: float, response: Response, db
 @app.get("/get_weight/{user_id}")
 async def get_weight(user_id: int, db: Session = Depends(get_db)) -> float:
     return crud.get_weight(db=db, user_id=user_id)
+
+
+@app.get("/get_weights/{user_id}")
+async def get_weights(user_id: int, db: Session = Depends(get_db)) -> List[float]:
+    return crud.get_weights(db=db, user_id=user_id)
